@@ -16,7 +16,7 @@ else
 fi
 
 check_2_2="2.2  - Ensure that the --client-cert-auth argument is set to true (Automated)"
-if check_argument "$CIS_ETCD_CMD" '--client-cert-auth' >/dev/null 2>&1; then
+if check_argument "$CIS_ETCD_CMD" '--client-cert-auth=true' >/dev/null 2>&1; then
     pass "$check_2_2"
 else
     warn "$check_2_2"

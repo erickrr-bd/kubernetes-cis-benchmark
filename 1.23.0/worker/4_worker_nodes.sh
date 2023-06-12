@@ -29,9 +29,8 @@ fi
 check_4_1_3="4.1.3  - If proxy kubeconfig file exists ensure permissions are set to 600 or more restrictive (Manual)"
 file=""
 if check_argument "$CIS_PROXY_CMD" '--kubeconfig' >/dev/null 2>&1; then
-    file=$(get_argument_value "$CIS_PROXY_CMD" '--kubeconfig'|cut -d " " -f 1)
+    file=$(get_argument_value "$CIS_PROXY_CMD" '--kubeconfig'| cut -d " " -f 1)
 fi
-
 if [ -f "$file" ]; then
   if [ "$(stat -c %a $file)" -eq 600 -o "$(stat -c %a $file)" -eq 400 ]; then
     pass "$check_4_1_3"
@@ -59,7 +58,6 @@ fi
 
 check_4_1_5="4.1.5  - Ensure that the --kubeconfig kubelet.conf file permissions are set to 600 or more restrictive (Automated)"
 file="/etc/kubernetes/kubelet.conf"
-
 if [ -f "$file" ]; then
   if [ "$(stat -c %a $file)" -eq 600 -o "$(stat -c %a $file)" -eq 400 ]; then
     pass "$check_4_1_5"

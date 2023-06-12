@@ -19,7 +19,7 @@ while [ "$#" -ge 0 ]
 do
   case $1 in
     -b) nocolor="nocolor"; shift;;
-    1.0.0|1.2.0|1.4.1|1.5.1|1.6.0|1.7.0|gke) ver=$1; break 2;;
+    1.0.0|1.2.0|1.4.1|1.5.1|1.6.0|1.23.0|gke) ver=$1; break 2;;
     *) usage; exit 1;;
   esac
 done
@@ -34,8 +34,8 @@ case $ver in
   gke)
     . ./helper_gke.sh
     ;;
-  1.7.0)
-    . ./helper1_7_0.sh
+  1.23.0)
+    . ./helper1_23_0.sh
     ;;
   1.6.0)
     . ./helper1_6_0.sh

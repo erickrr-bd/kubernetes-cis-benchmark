@@ -3,13 +3,9 @@ info "1 - Control Plane Components"
 info "1.1 - Master Node Configuration Files"
 
 check_1_1_1="1.1.1  - Ensure that the API server pod specification file permissions are set to 600 or more restrictive (Automated)"
-if [ -f "/etc/kubernetes/manifests/kube-apiserver.manifest" ]; then
-    file="/etc/kubernetes/manifests/kube-apiserver.manifest"
-else
-    file="/etc/kubernetes/manifests/kube-apiserver.yaml"
-fi
+file="/etc/kubernetes/manifests/kube-apiserver.yaml"
 if [ -f $file ]; then
-  if [ "$(stat -c %a $file)" -eq 600 ]; then
+  if [ "$(stat -c %a $file)" -eq 600 -o "$(stat -c %a $file)" -eq 400 ]; then
     pass "$check_1_1_1"
   else
     warn "$check_1_1_1"
@@ -33,12 +29,7 @@ else
 fi
 
 check_1_1_3="1.1.3  - Ensure that the controller manager pod specification file permissions are set to 600 or more restrictive (Automated)"
-if [ -f "/etc/kubernetes/manifests/kube-controller-manager.manifest" ]; then
-    file="/etc/kubernetes/manifests/kube-controller-manager.manifest"
-else
-    file="/etc/kubernetes/manifests/kube-controller-manager.yaml"
-fi
-
+file="/etc/kubernetes/manifests/kube-controller-manager.yaml"
 if [ -f "$file" ]; then
   if [ "$(stat -c %a $file)" -eq 600 -o "$(stat -c %a $file)" -eq 400 ]; then
     pass "$check_1_1_3"
@@ -64,12 +55,7 @@ else
 fi
 
 check_1_1_5="1.1.5  - Ensure that the scheduler pod specification file permissions are set to 600 or more restrictive (Automated)"
-if [ -f "/etc/kubernetes/manifests/kube-scheduler.yaml" ]; then
-    file="/etc/kubernetes/manifests/kube-scheduler.yaml"
-else
-    file="/etc/kubernetes/manifests/kube-scheduler.manifest"
-fi
-
+file="/etc/kubernetes/manifests/kube-scheduler.yaml"
 if [ -f "$file" ]; then
   if [ "$(stat -c %a $file)" -eq 600 -o "$(stat -c %a $file)" -eq 400 ]; then
     pass "$check_1_1_5"
@@ -95,12 +81,7 @@ else
 fi
 
 check_1_1_7="1.1.7  - Ensure that the etcd pod specification file permissions are set to 600 or more restrictive (Automated)"
-if [ -f "/etc/kubernetes/manifests/etcd.yaml" ]; then
-    file="/etc/kubernetes/manifests/etcd.yaml"
-else
-    file="/etc/kubernetes/manifests/etcd.manifest"
-fi
-
+file="/etc/kubernetes/manifests/etcd.yaml"
 if [ -f "$file" ]; then
   if [ "$(stat -c %a $file)" -eq 600 -o "$(stat -c %a $file)" -eq 400 ]; then
     pass "$check_1_1_7"
@@ -257,7 +238,6 @@ for f in ${files}; do
     break;
   fi
 done
-
 if [ "$pass" = "true" ]; then
   pass "$check_1_1_19"
 else
@@ -273,7 +253,6 @@ for f in ${files}; do
     break;
   fi
 done
-
 if [ "$pass" = "true" ]; then
   pass "$check_1_1_20"
 else
@@ -289,7 +268,6 @@ for f in ${files}; do
     break;
   fi
 done
-
 if [ "$pass" = "true" ]; then
   pass "$check_1_1_21"
 else
@@ -417,7 +395,7 @@ fi
 
 check_1_2_16="1.2.16  - Ensure that the --secure-port argument is not set to 0 (Automated)"
 if check_argument "$CIS_APISERVER_CMD" '--secure-port' >/dev/null 2>&1; then
-    port=$(get_argument_value "$CIS_APISERVER_CMD" '--secure-port'|cut -d " " -f 1)
+    port=$(get_argument_value "$CIS_APISERVER_CMD" '--secure-port'| cut -d " " -f 1)
     if [ "$port" = "0" ]; then
         warn "$check_1_2_16"
         warn "       * secure-port: $port"
@@ -639,7 +617,7 @@ fi
 check_1_3_6="1.3.6  - Ensure that the RotateKubeletServerCertificate argument is set to true (Automated)"
 if check_argument "$CIS_MANAGER_CMD" '--feature-gates' >/dev/null 2>&1; then
     serverCert=$(get_argument_value "$CIS_MANAGER_CMD" '--feature-gates')
-    found=$(echo $serverCert| grep 'RotateKubeletServerCertificate=true')
+    found=$(echo $serverCert | grep 'RotateKubeletServerCertificate=true')
     if [ ! -z $found ]; then
       pass "$check_1_3_6"
     else
